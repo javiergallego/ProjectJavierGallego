@@ -50,6 +50,9 @@ for setIndex = 1: length(indexes)
         ecg = data(time_vector);
         [kSQI_01_vector, sSQI_01_vector, pSQI_01_vector, rel_powerLine01_vector, cSQI_01_vector, basSQI_01_vector, dSQI_01_vector, geometricMean_vector, averageGeometricMean] = mSQI(ecg, 1000);
         indexes{setIndex}{fileIndex} = geometricMean_vector;
+        filename = 'valores_mSQI.txt';
+        fileID = fopen(filename, 'w');
+        fprintf(fileID, geometricMean_vector);
         fprintf("Average mean of windows of %s: %f\n", currentFiles{fileIndex}, averageGeometricMean);
     end
 end
