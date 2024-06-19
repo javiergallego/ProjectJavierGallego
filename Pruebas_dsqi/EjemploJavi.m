@@ -7,7 +7,7 @@ if (TEST)
     files_ShirtM = {'C:\Registros\Javi1m.txt', 
         'C:\Registros\Javi2m.txt',
         'C:\Registros\Javi3m.txt',
-        '"C:\Registros\Javi4m.txt"'};
+        'C:\Registros\Javi4m.txt'};
 
     files_ShirtS = {'C:\Registros\Javi1s.txt', 
         'C:\Registros\Javi2s.txt',
@@ -17,14 +17,14 @@ if (TEST)
     files_ShirtL = {'C:\Registros\Javi1l.txt', 
         'C:\Registros\Javi2l.txt',
         'C:\Registros\Javi3l.txt',
-        '"C:\Registros\Javi4l.txt'}; 
+        'C:\Registros\Javi4l.txt'}; 
 else
      time_vector = 1:(((7*60 + 59)*60)*1000-360000); 
      
     files_ShirtM = {'C:\Registros\Javi1m.txt', 
         'C:\Registros\Javi2m.txt',
         'C:\Registros\Javi3m.txt',
-        '"C:\Registros\Javi4m.txt"'};
+        'C:\Registros\Javi4m.txt'};
 
     files_ShirtS = {'C:\Registros\Javi1s.txt', 
         'C:\Registros\Javi2s.txt',
@@ -34,7 +34,7 @@ else
     files_ShirtL = {'C:\Registros\Javi1l.txt', 
         'C:\Registros\Javi2l.txt',
         'C:\Registros\Javi3l.txt',
-        '"C:\Registros\Javi4l.txt'};
+        'C:\Registros\Javi4l.txt'};
 end
 
 
