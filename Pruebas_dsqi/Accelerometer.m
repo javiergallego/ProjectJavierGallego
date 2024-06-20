@@ -1,27 +1,82 @@
+% Filtrado de las señales
+function [accx, accy, accz] = calibrating(adcx, adcy, adcz)
+    % Valores mínimos de cada borde
+    min_x = 26568;
+    min_y = 32036;
+    min_z = 32444;
 
+    % Valores máximos de cada borde
+    max_x = 33580;
+    max_y = 38632;
+    max_z = 35940;
 
-data =  filename
-accX = data(:, 1);
-accY = data(:, 2);
-accZ = data(:, 3);
+    % Función de transferencia
+    accx = (adcx - min_x) / (max_x - min_x) * 2 - 1;
+    accy = (adcy - min_y) / (max_y - min_y) * 2 - 1;
+    accz = (adcz - min_z) / (max_z - min_z) * 2 - 1;
+end
 
-% Constants
-g = 9.81;
+% Listas de archivos
+files_ShirtM = {'C:\Registros\Javi1m.txt', 
+    'C:\Registros\Javi2m.txt',
+    'C:\Registros\Javi3m.txt',
+    'C:\Registros\Javi4m.txt'};
 
-% Here we assume the average of initial readings represents gravity. 
-gravityX = mean(accX(1:100));
-gravityY = mean(accY(1:100));
-gravityZ = mean(accZ(1:100));
+files_ShirtS = {'C:\Registros\Javi1s.txt', 
+    'C:\Registros\Javi2s.txt',
+    'C:\Registros\Javi3s.txt',
+    'C:\Registros\Javi4s.txt'};
 
-% Remove the gravity component
-accX = accX - gravityX;
-accY = accY - gravityY;
-accZ = accZ - gravityZ;
+files_ShirtL = {'C:\Registros\Javi1l.txt', 
+    'C:\Registros\Javi2l.txt',
+    'C:\Registros\Javi3l.txt',
+    'C:\Registros\Javi4l.txt'};
 
-% Sum the accelerations in the three axes
-sumAcc = accX + accY + accZ;
+% Combinamos todas las listas de archivos
+all_files = [files_ShirtM, files_ShirtS, files_ShirtL];
 
-% Energy is the sum of the squared values
-energy = sum(sumAcc.^2);
+% Procesar cada uno de los archivos
+for i = 1:length(all_files)
+    % Obtener el nombre del archivo
+    filename = all_files{i};
+    
+    % Importar los datos del archivo de texto
+    data = readmatrix(filename, 'Delimiter', ' ');  % Ajustar el delimitador según sea necesario
+    
+    % Asegurar que hay suficientes muestras
+    numSamples = 10000000;
+    
+    % Separar los datos en los ejes X, Y, Z
+    adcX = data(:, 1);
+    adcY = data(:, 2);
+    adcZ = data(:, 3);
+
+    % Filtrar las señales
+    [accX, accY, accZ] = filtering(adcX, adcY, adcZ);
+
+    % Calcular la media de las primeras 10,000,000 muestras
+    gravityX = mean(accX(1:numSamples));
+    gravityY = mean(accY(1:numSamples));
+    gravityZ = mean(accZ(1:numSamples));
+
+    % Eliminar la componente gravitacional
+    accX = accX - gravityX;
+    accY = accY - gravityY;
+    accZ = accZ - gravityZ;
+
+    % Sumar las aceleraciones en los tres ejes
+    sumAcc = accX + accY + accZ;
+
+    % Calcular la energía como la suma de los valores cuadrados
+    energy = sum(sumAcc.^2);
+
+    % Calcular la potencia dividiendo la energía por el número de muestras
+    numTotalSamples = length(sumAcc);
+    power = energy / numTotalSamples;
+
+    % Mostrar la potencia calculada para cada archivo
+    fprintf('La potencia calculada para %s es: %f\n', filename, power);
+end
+
 
 
