@@ -25,10 +25,9 @@ for i = 1:length(all_files)
     filename = all_files{i};
     
     % Importar los datos del archivo de texto
-    data = readmatrix(filename, 'Delimiter', ' ');  % Ajustar el delimitador según sea necesario
+    data = readmatrix(filename, 'Delimiter', ' ');  
     
-    % Asegurar que hay suficientes muestras
-    numSamples = 10000000;
+    numSamples = 100000;
     
     % Separar los datos en los ejes X, Y, Z
     adcX = data(:, 1);
@@ -38,7 +37,7 @@ for i = 1:length(all_files)
     % Filtrar las señales
     [accX, accY, accZ] = calibrating(adcX, adcY, adcZ);
 
-    % Calcular la media de las primeras 10,000,000 muestras
+    % Calcular la media de las primeras 100000 muestras
     gravityX = mean(accX(1:numSamples));
     gravityY = mean(accY(1:numSamples));
     gravityZ = mean(accZ(1:numSamples));
