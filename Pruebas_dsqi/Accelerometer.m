@@ -1,20 +1,4 @@
 % Filtrado de las señales
-function [accx, accy, accz] = calibrating(adcx, adcy, adcz)
-    % Valores mínimos de cada borde
-    min_x = 26568;
-    min_y = 32036;
-    min_z = 32444;
-
-    % Valores máximos de cada borde
-    max_x = 33580;
-    max_y = 38632;
-    max_z = 35940;
-
-    % Función de transferencia
-    accx = (adcx - min_x) / (max_x - min_x) * 2 - 1;
-    accy = (adcy - min_y) / (max_y - min_y) * 2 - 1;
-    accz = (adcz - min_z) / (max_z - min_z) * 2 - 1;
-end
 
 % Listas de archivos
 files_ShirtM = {'C:\Registros\Javi1m.txt', 
@@ -52,7 +36,7 @@ for i = 1:length(all_files)
     adcZ = data(:, 3);
 
     % Filtrar las señales
-    [accX, accY, accZ] = filtering(adcX, adcY, adcZ);
+    [accX, accY, accZ] = calibrating(adcX, adcY, adcZ);
 
     % Calcular la media de las primeras 10,000,000 muestras
     gravityX = mean(accX(1:numSamples));
@@ -77,6 +61,8 @@ for i = 1:length(all_files)
     % Mostrar la potencia calculada para cada archivo
     fprintf('La potencia calculada para %s es: %f\n', filename, power);
 end
+
+
 
 
 
