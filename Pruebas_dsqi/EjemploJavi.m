@@ -1,14 +1,14 @@
 
-TEST = 0;
+TEST = 1;
 
 if (TEST)
     time_vector = 1:((7*60 + 59)*60); 
-    
+   
     files_ShirtM = {'C:\Registros\Javi1m.txt', 
         'C:\Registros\Javi2m.txt',
         'C:\Registros\Javi3m.txt',
         'C:\Registros\Javi4m.txt'};
-
+    
     files_ShirtS = {'C:\Registros\Javi1s.txt', 
         'C:\Registros\Javi2s.txt',
         'C:\Registros\Javi3s.txt',
@@ -37,25 +37,34 @@ else
         'C:\Registros\Javi4l.txt'};
 end
 
-
 fileSets = {files_ShirtL, files_ShirtM, files_ShirtS};
 indexes = cell(1, length(fileSets)); % indexes = cell(1, length(fileSets)); -> vector de 3 pos
 
+filename = 'valores_mSQI.txt';
+fileID = fopen(filename, 'w');
+
+
 for setIndex = 1: length(indexes)
-    currentFiles = fileSets{setIndex};% ej: currentFiles= fileSets{1} -> files_ShirtL ->(...,...,....,....)
+    currentFiles = fileSets{setIndex}; % ej: currentFiles= fileSets{1} -> files_ShirtL ->(...,...,....,....)
     indexes{setIndex} = cell(1, length(currentFiles)); % indexes{1}= a un vector con 4 pos 
 
     for fileIndex = 1:length(currentFiles) % fileIndex = 1:length(currentFiles)=4
-        data = ImportPluxData(currentFiles{fileIndex}, 3);
+        currentFile = currentFiles{fileIndex};
+        data = ImportPluxData(currentFile, 3);
         ecg = data(time_vector);
+        
         [kSQI_01_vector, sSQI_01_vector, pSQI_01_vector, rel_powerLine01_vector, cSQI_01_vector, basSQI_01_vector, dSQI_01_vector, geometricMean_vector, averageGeometricMean] = mSQI(ecg, 1000);
+    
         indexes{setIndex}{fileIndex} = geometricMean_vector;
-        filename = 'valores_mSQI.txt';
-        fileID = fopen(filename, 'w');
-        fprintf(fileID, geometricMean_vector);
-        fprintf("Average mean of windows of %s: %f\n", currentFiles{fileIndex}, averageGeometricMean);
+        
+        % Escribir geometricMean_vector en el archivo
+        fprintf(fileID, '%f\n', geometricMean_vector);
+        fprintf('Average mean of windows of %s: %f\n', currentFile, averageGeometricMean);
     end
 end
+
+fclose(fileID);
+
 
 indexes_ShirtL = indexes{1};
 indexes_ShirtM = indexes{2};
