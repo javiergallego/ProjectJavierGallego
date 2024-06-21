@@ -1,4 +1,3 @@
-
 TEST = 1;
 
 if (TEST)
@@ -19,7 +18,7 @@ if (TEST)
         'C:\Registros\Javi3l.txt',
         'C:\Registros\Javi4l.txt'}; 
 else
-     time_vector = 1:(((7*60 + 59)*60)*1000-360000); 
+    time_vector = 1:(((7*60 + 59)*60)*1000-360000); 
      
     files_ShirtM = {'C:\Registros\Javi1m.txt', 
         'C:\Registros\Javi2m.txt',
@@ -40,11 +39,7 @@ end
 fileSets = {files_ShirtL, files_ShirtM, files_ShirtS};
 indexes = cell(1, length(fileSets)); % indexes = cell(1, length(fileSets)); -> vector de 3 pos
 
-filename = 'valores_mSQI.txt';
-fileID = fopen(filename, 'w');
-
-
-for setIndex = 1: length(indexes)
+for setIndex = 1:length(indexes)
     currentFiles = fileSets{setIndex}; % ej: currentFiles= fileSets{1} -> files_ShirtL ->(...,...,....,....)
     indexes{setIndex} = cell(1, length(currentFiles)); % indexes{1}= a un vector con 4 pos 
 
@@ -57,25 +52,26 @@ for setIndex = 1: length(indexes)
     
         indexes{setIndex}{fileIndex} = geometricMean_vector;
         
-        % Escribir geometricMean_vector en el archivo
-        fprintf(fileID, '%f\n', geometricMean_vector);
+        % Print mean 
         fprintf('Average mean of windows of %s: %f\n', currentFile, averageGeometricMean);
+        
+        % Creation of individual files to save the data of each register
+        [~, name, ~] = fileparts(currentFile); % name of the file 
+        individualFilename = sprintf('valores_mSQI_%s.txt', name);
+        individualFileID = fopen(individualFilename, 'w');
+                
+        % Save all of the values of mSQI
+        for i = 1:length(geometricMean_vector)
+            fprintf(individualFileID, '%f\n', geometricMean_vector(i));
+        end
+        
+        fclose(individualFileID);
     end
 end
-
-fclose(fileID);
-
 
 indexes_ShirtL = indexes{1};
 indexes_ShirtM = indexes{2};
 indexes_ShirtS = indexes{3};
-
-
-
-%significance level for calculating the confidence intervals
-alph = 0.01;
-%number of iterations to use in boostrap
-iter = 1000;
 
 % Data for the Comparison Within Each Register
 % data of ShirtL that will be used for the CI
