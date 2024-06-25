@@ -1,5 +1,6 @@
-TEST = 1;
-
+alph = 0.05; 
+iter = 1000; 
+TEST=1
 if (TEST)
     time_vector = 1:((7*60 + 59)*60); 
    
